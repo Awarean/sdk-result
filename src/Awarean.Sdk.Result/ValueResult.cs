@@ -17,15 +17,17 @@ namespace Awarean.Sdk.Result
             if (genericType is null)
                 return;
 
-            if(genericType.IsClass)
-                Value = (T) genericType.GetField("Empty").GetValue(null) 
-                    ?? throw new ArgumentNullException(nameof(Value), $"No implementation of empty object pattern for type {genericType.FullName} found.");
-            
-            Value = default;
+            if (genericType.IsClass is false)
+                Value = default;
+
+            else
+                Value = (T) genericType.GetField("Empty")?.GetValue(null)
+                    ?? throw new NotImplementedException($"No implementation of null object pattern for type {genericType.FullName} found.");
+
         }
 
         public static Result<T> Success(T value) => new Result<T>(value);
 
-        public static Result<T> Fail(string errorCode, string errorMessage) => new Result<T>(Error.Create(errorCode, errorMessage));
+        public static new Result<T> Fail(string errorCode, string errorMessage) => new Result<T>(Error.Create(errorCode, errorMessage));
     }
 }
