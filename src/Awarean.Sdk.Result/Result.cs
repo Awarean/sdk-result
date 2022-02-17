@@ -2,10 +2,10 @@
 {
     public class Result
     {
-        private bool isSuccess;
+        private readonly bool isSuccess;
         protected Result(bool isSuccess, Error error) => (this.isSuccess, Error) = (isSuccess, error);
 
-        public bool IsSuccess { get => isSuccess; private set => value = isSuccess; }
+        public bool IsSuccess { get => isSuccess; }
 
         public bool IsFailed { get => isSuccess is false; }
 
