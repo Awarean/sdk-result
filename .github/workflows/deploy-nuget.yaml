@@ -45,13 +45,17 @@ jobs:
 
       - name: Test
         run: dotnet test --no-restore --verbosity normal
+      
+      - name: Mark version as beta
+        if: contains(github.ref, 'refs/heads/develop')
+        run: export VERSION_TYPE= 'beta-'
 
       - name: Pack Project
         if: contains(github.ref, 'refs/heads/main') || contains(github.ref,  'refs/heads/develop') || contains(github.ref, 'release')
         run:
           dotnet pack src/Awarean.Sdk.Result/Awarean.Sdk.Result.csproj
           --output nupkgs
-          --version-suffix ${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.PATCH }}.${{ env.GITHUB_RUN_NUMBER }}.${{ env.VERSION_TYPE }}
+          --version-suffix ${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.PATCH }}.${{ env.VERSION_TYPE }}${{ github.run_number }}
           --no-restore --no-build
 
       - name: Nuget Push
