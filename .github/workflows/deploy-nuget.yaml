@@ -1,0 +1,62 @@
+name: project-package-nuget-deploy
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/*
+      - fix/*
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  PROJECT_NAME: Awarean.Sdk.Result
+  MAJOR_VERSION: 0
+  MINOR_VERSION: 0
+  PATCH: 1
+  NUGET_API_KEY: ${{ Secrets.NUGET_API_KEY }}
+  REGISTRY_URL: https://api.nuget.org/v3/index.json
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ["6.0.x"]
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+
+      - name: Pack Project
+        if: contains(github.ref, 'refs/heads/main') || contains(github.ref,  'refs/heads/develop') || contains(github.ref, 'release')
+        run:
+          dotnet pack src/Awarean.Sdk.Result/Awarean.Sdk.Result.csproj
+          --output nupkgs
+          --version-suffix ${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.PATCH }}.${{ env.GITHUB_RUN_NUMBER }}.${{ env.VERSION_TYPE }}
+          --no-restore --no-build
+
+      - name: Nuget Push
+        if: contains(github.ref, 'refs/heads/main') || contains(github.ref,  'refs/heads/develop') || contains(github.ref, 'release')
+        run:
+          dotnet nuget push **/nupkgs/*.nupkg
+          --api-key ${{ env.NUGET_API_KEY }}
+          --source ${{ env.REGISTRY_URL }}
