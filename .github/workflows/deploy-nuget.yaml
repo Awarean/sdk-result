@@ -46,7 +46,7 @@ jobs:
       - name: Test
         run: dotnet test --no-restore --verbosity normal
       
-       - name: Set Version as PreRelease
+      - name: Set Version as PreRelease
         if: contains(github.ref, 'refs/heads/develop')
         run: echo "PATCH=${{ env.PATCH }}-beta.${{ github.run_number }}" >> $GITHUB_ENV
 
