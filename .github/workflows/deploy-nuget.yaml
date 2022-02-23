@@ -37,6 +37,10 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
+      
+      - name: Install Mutation Tests Runner
+        run: dotnet tool install dotnet-stryker --global
+
       - name: Install dependencies
         run: dotnet restore
 
@@ -45,6 +49,9 @@ jobs:
 
       - name: Test
         run: dotnet test --no-restore --verbosity normal
+      
+      - name: Mutation Test
+        run: cd tests/Awarean.Sdk.Result.Tests | dotnet stryker
       
       - name: Mark version as beta
         if: contains(github.ref, 'refs/heads/develop')
