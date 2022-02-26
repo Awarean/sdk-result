@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Awarean.Sdk.Result.Tests.Fixtures.Mocks
 {
     public class MockClasses
@@ -12,6 +7,16 @@ namespace Awarean.Sdk.Result.Tests.Fixtures.Mocks
         {
             public string MockProperty1 { get; set; } = String.Empty;
             public string MockProperty2 { get; set; } = String.Empty;
+        }
+
+        public class MockingClassWithEmptyObject
+        {
+            public static readonly MockingClassWithEmptyObject Empty = new MockingClassWithEmptyObject();
+        }
+
+        public class MockingClassWithNullObject
+        {
+            public static readonly MockingClassWithEmptyObject Null = new MockingClassWithEmptyObject();
         }
     }
 }
