@@ -6,6 +6,9 @@ on:
       - develop
       - feature/*
       - fix/*
+    paths-ignore:
+      - "tests/*"
+
   pull_request:
     branches:
       - main
