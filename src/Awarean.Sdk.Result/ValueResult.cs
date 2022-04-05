@@ -35,6 +35,7 @@ namespace Awarean.Sdk.Result
 
         public static Result<T> Success(T value) => new Result<T>(value);
 
-        public static new Result<T> Fail(string errorCode, string errorMessage) => new Result<T>(Error.Create(errorCode, errorMessage));
+        public static new Result<T> Fail(string errorCode, string errorMessage) => Fail(Error.Create(errorCode, errorMessage));
+        public static new Result<T> Fail(Error error) => new Result<T>(error);
     }
 }
