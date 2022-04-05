@@ -52,5 +52,15 @@ namespace Awarean.Sdk.Result.Tests
                 .WithMessage($"No implementation of null object pattern for type {nameof(MockingClass)} found." +
                     $"*Please implement a public static readonly field named \"Null\" or * \"Empty\" for type {nameof(MockingClass)}*");
         }
+
+        [Fact]
+        public void Failed_Result_Should_Be_Of_Correct_Type()
+        {
+            var expected = Error.Create("Test_Failed_Code", "Test meant for failing");
+            var result = Result<Error>.Fail(expected);
+
+            result.Error.Should().Be(expected);
+            result.Should().BeOfType<Result<Error>>();
+        }
     }
 }
