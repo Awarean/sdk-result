@@ -1,7 +1,10 @@
 ﻿using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using Xunit;
+using System.Collections;
 using static Awarean.Sdk.Result.Tests.Fixtures.Mocks.MockClasses;
+using System.Linq;
 
 namespace Awarean.Sdk.Result.Tests
 {
@@ -61,6 +64,35 @@ namespace Awarean.Sdk.Result.Tests
 
             result.Error.Should().Be(expected);
             result.Should().BeOfType<Result<Error>>();
+        }
+
+        [Theory]
+        [MemberData(nameof(CollectionsGenerator))]
+        public void Failed_Result_For_Collection_Should_Have_Empty_Collection(Type collectionType, Type elementType)
+        {
+            var collectionGenericType = collectionType.MakeGenericType(elementType);
+            var testInfo = typeof(ValueResultTests).GetMethod(nameof(TestFailedResultsForCollections));
+
+            testInfo.MakeGenericMethod(collectionGenericType, elementType).Invoke(this, null);
+        }
+
+        public void TestFailedResultsForCollections<T, V>() where T : IEnumerable<V>
+        {
+            var error = Error.Create("Test_Failed_Code_IEnumerable", "Test meant for failing result with collection");
+            var result = Result<T>.Fail(error);
+
+            var expected = Enumerable.Empty<V>();
+            result.Value.Should().BeEmpty();
+            result.Value.Should().BeEquivalentTo(expected);
+        }
+
+        public static IEnumerable<object[]> CollectionsGenerator()
+        {
+            yield return new object[] { typeof(List<>), typeof(MockingClass)};
+            yield return new object[] { typeof(HashSet<>), typeof(MockingClass)};
+            yield return new object[] { typeof(LinkedList<>), typeof(MockingClass)};
+            yield return new object[] { typeof(Queue<>), typeof(MockingClass)};
+            yield return new object[] { typeof(Stack<>), typeof(MockingClass)};
         }
     }
 }
