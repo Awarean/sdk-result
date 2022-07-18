@@ -9,8 +9,8 @@ namespace Awarean.Sdk.Result
 
         private Error() { }
 
-        private Error(string code, string message) => 
-            (Code, Message) = (code ?? throw new ArgumentNullException(nameof(code)), message ?? throw new ArgumentNullException(nameof(Message)));
+        private Error(string code, string reason) => 
+            (Code, reason) = (code ?? throw new ArgumentNullException(nameof(code)), reason ?? throw new ArgumentNullException(nameof(reason)));
 
         public string Code { get; private set; } = string.Empty;
         public string Message { get; private set; } = string.Empty;

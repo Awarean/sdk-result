@@ -1,5 +1,6 @@
 using Xunit;
 using FluentAssertions;
+using static Awarean.Sdk.Result.Tests.Fixtures.Mocks.MockClasses;
 
 namespace Awarean.Sdk.Result.Tests;
 
@@ -67,5 +68,39 @@ public class ResultTests
         var result = Result.Fail(string.Empty, string.Empty);
 
         result.IsFailed.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Creating_Typed_Failed_Result_Should_Work()
+    {
+        var expected = new MockingClass() { MockProperty1 = "Success", MockProperty2 = "Created from Result Class" };
+        var result = Result.Success(expected);
+
+        result.Should().BeOfType(typeof(Result<MockingClass>));
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Creating_Typed_Error_Result_With_Using_Instance_Should_Pass()
+    {
+        var expected = MockingClassWithEmptyObject.Empty;
+        var expectedError = Error.Create("TEST_ERROR", "Test error for typed result");
+        var result = Result.Fail<MockingClassWithEmptyObject>(expectedError);
+
+        result.Should().BeOfType(typeof(Result<MockingClassWithEmptyObject>));
+        result.IsFailed.Should().BeTrue();
+        result.Value.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Creating_Typed_Error_Result_Using_Messages_Should_Pass()
+    {
+        var expected = MockingClassWithEmptyObject.Empty;
+        var result = Result.Fail<MockingClassWithEmptyObject>("TEST_ERROR", "Test error for typed result");
+
+        result.Should().BeOfType(typeof(Result<MockingClassWithEmptyObject>));
+        result.IsFailed.Should().BeTrue();
+        result.Value.Should().Be(expected);
     }
 }
