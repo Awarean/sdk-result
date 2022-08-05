@@ -18,7 +18,7 @@ env:
   PROJECT_NAME: Awarean.Sdk.Result
   MAJOR_VERSION: 0
   MINOR_VERSION: 2
-  PATCH: 0
+  PATCH: 1
   NUGET_API_KEY: ${{ Secrets.NUGET_API_KEY }}
   REGISTRY_URL: https://api.nuget.org/v3/index.json
 

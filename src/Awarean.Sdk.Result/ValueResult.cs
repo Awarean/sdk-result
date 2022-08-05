@@ -16,10 +16,10 @@ namespace Awarean.Sdk.Result
 
         public T Value { get; private set; }
 
-        private Result(T value) : base(true, Error.Empty) =>
+        protected Result(T value) : base(true, Error.Empty) =>
             Value = value ?? throw new ArgumentNullException(nameof(value));
 
-        private Result(Error error) : base(false, error)
+        protected Result(Error error) : base(false, error)
         {
             var genericType = typeof(T);
 
@@ -46,7 +46,6 @@ namespace Awarean.Sdk.Result
         }
 
         public static Result<T> Success(T value) => new Result<T>(value);
-
         public static new Result<T> Fail(string errorCode, string reason) => Fail(Error.Create(errorCode, reason));
         public static new Result<T> Fail(Error error) => new Result<T>(error);
     }
