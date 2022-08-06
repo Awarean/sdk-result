@@ -25,6 +25,7 @@ public class ChildrenResultTests
         var error = Error.Create("TYPED_CHILDREN_RESULT_ERROR", "Typed_Children_Result_Error");
         var sut = new ChildrenResult(error);
 
-        sut.Value.Should().Be(error);
+        sut.Error.Should().Be(error);
+        sut.IsFailed.Should().BeTrue();
     }
 }
