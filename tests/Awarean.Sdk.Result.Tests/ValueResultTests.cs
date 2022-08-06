@@ -19,6 +19,14 @@ namespace Awarean.Sdk.Result.Tests
         }
 
         [Fact]
+        public void Failed_String_Results_Should_Be_Empty()
+        {
+            var result = Result.Fail<string>("test_code", "test_message");
+
+            result.Value.Should().Be(string.Empty);
+        }
+
+        [Fact]
         public void Success_Result_Should_Correct_Value()
         {
             var expected = new MockingClass();
@@ -74,6 +82,22 @@ namespace Awarean.Sdk.Result.Tests
             var testInfo = typeof(ValueResultTests).GetMethod(nameof(TestFailedResultsForCollections));
 
             testInfo.MakeGenericMethod(collectionGenericType, elementType).Invoke(this, null);
+        }
+
+        [Fact]
+        private void Primitive_Typed_Failed_Results_Should_Be_Default_Value()
+        {
+            Execute_Primitive_TypedTests<decimal>();
+            Execute_Primitive_TypedTests<long>();
+            Execute_Primitive_TypedTests<int>();
+            Execute_Primitive_TypedTests<char>();
+        }
+
+        public void Execute_Primitive_TypedTests<T>()
+        {
+            var result = Result.Fail<T>($"{typeof(T).Name}_Failed", $"Error when creating failed result for primitive type {typeof(T)}");
+
+            result.Value.Should().Be(default(T));
         }
 
         public void TestFailedResultsForCollections<T, V>() where T : IEnumerable<V>
