@@ -1,6 +1,7 @@
 using Xunit;
 using FluentAssertions;
 using static Awarean.Sdk.Result.Tests.Fixtures.Mocks.MockClasses;
+using System.Linq;
 
 namespace Awarean.Sdk.Result.Tests;
 
@@ -102,5 +103,17 @@ public class ResultTests
         result.Should().BeOfType(typeof(Result<MockingClassWithEmptyObject>));
         result.IsFailed.Should().BeTrue();
         result.Value.Should().Be(expected);
+    }
+
+    [Fact]
+    public void AggregatedError_Should_Enable_Append_Errors()
+    {
+        var result = Result.Fail("TEST_ERROR", "First test error");
+
+        var aggregatedResult = result.Aggregate("AGGREGATED_ERROR", "Second error created to aggregate");
+
+        aggregatedResult.Errors.Should().HaveCount(2);
+        aggregatedResult.Errors.Should().Contain(result.Error);
+        aggregatedResult.Should().BeOfType<AggregatedResult>();
     }
 }

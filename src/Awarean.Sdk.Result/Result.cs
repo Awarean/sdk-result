@@ -9,7 +9,7 @@
 
         public bool IsFailed { get => isSuccess is false; }
 
-        public Error Error { get; private set; }
+        public virtual Error Error { get; protected set; }
 
     #region Base Result Creation Methods
         public static Result Success() => new Result(isSuccess: true, error: Error.Empty);
